@@ -1,0 +1,8 @@
+Remove comments before using.
+
+{
+  "firebaseDatabaseURL": "", // Firebase Database URL
+  "firebaseStorageBucket": "", // Firebase File Storage Bucket
+  "guardianAPI":"", // Guardian API Key
+  "articleLoadedFromDbLimit": "1000"
+}
