@@ -4,5 +4,6 @@ Remove comments before using.
   "firebaseDatabaseURL": "", // Firebase Database URL
   "firebaseStorageBucket": "", // Firebase File Storage Bucket
   "guardianAPI":"", // Guardian API Key
-  "articleLoadedFromDbLimit": "1000"
+  "articleLoadedFromDbLimit": "1000",
+  "articleRequestedFromGuardian": "30"
 }
