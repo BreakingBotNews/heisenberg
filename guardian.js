@@ -36,7 +36,8 @@ function callGuardian(lastDb){
 
                 //write to db or omit
                 if(!doublet){
-                    ref.push().set({
+                    var key = ref.push();
+                    key.set({
                         id: helper.testContentAvailability(result.id),
                         url: helper.testContentAvailability(result.webUrl),
                         type: helper.testContentAvailability(result.type),
@@ -53,9 +54,18 @@ function callGuardian(lastDb){
                         publication: helper.testContentAvailability(result.fields.publication),
                         shortUrl: helper.testContentAvailability(result.fields.shortUrl),
                         thumbnail: helper.testContentAvailability(result.fields.thumbnail),
-                        language: helper.testContentAvailability(result.fields.lang)
-                        //categories, tags, place, country etc. missing
-                    })
+                        language: helper.testContentAvailability(result.fields.lang),
+                        tags: writeTagsToNews(result.tags)
+                    },function(error){
+                        if(error){
+                            console.log("Guardian: Error writing to db");
+                        }
+                        else{
+                          //  console.log("Guardian: One article written to db");
+                        }
+                    });
+                    //categories, tags, place, country etc. missing
+                    //function call and set via key. with promise? .then()?
                 }
             }
             console.log("Guardian: written to db");
@@ -64,7 +74,56 @@ function callGuardian(lastDb){
     })
 };
 
+function writeTagsToNews(data){
+    var returnTags=[];
 
+    for (var i=0; i<data.length; i++){
+        var tag = data[i];
+        checkTagInDb(tag);
+        //write data into obj
+        returnTags[i]= {
+            id: tag.id,
+            webTitle: tag.webTitle
+        }    
+    }
+    
+    //return obj with all keys and webTitle
+    return returnTags;
+};
+
+function checkTagInDb(tag) {
+    var ref = firebase.ref('meta/guardian/')
+    ref.once("value", function (snapshot) {
+        var db = snapshot.val();
+        var doublet=false;
+
+        //see if tag is in our meta db
+        for (var k in db){
+            if(k===tag.id){
+                //do something like count?
+                doublet=true;
+            }
+        }
+
+        //if no, write it
+        if(!doublet){
+            ref = firebase.ref('meta/guardian/'+tag.id).set({ //tag.id is a path, so it is actually divided here already
+                id: helper.testContentAvailability(tag.id),
+                type: helper.testContentAvailability(tag.type),
+                sectionId: helper.testContentAvailability(tag.sectionId),
+                sectionName: helper.testContentAvailability(tag.sectionName),
+                webTitle: helper.testContentAvailability(tag.webTitle),
+                webUrl: helper.testContentAvailability(tag.webUrl),
+                apiUrl: helper.testContentAvailability(tag.apiUrl),
+                references: helper.testContentAvailability(tag.references)
+            })
+        }
+        
+    }, function (errorObject) {
+        console.log("The read to meta db failed: " + errorObject.code);
+    });
+
+};
 
 function startGuardian () {
     var ref = firebase.ref('news/guardian/');
