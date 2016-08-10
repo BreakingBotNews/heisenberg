@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9fe74bbc-634a-4288-9827-da1d3d98b742" name="heisenberg to bot2" url="http://shaula.uberspace.de">
+        <fileTransfer host="shaula.uberspace.de" port="22" rootFolder="/home/bot2" accessType="SFTP" username="bot2">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

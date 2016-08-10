@@ -108,6 +108,7 @@ function checkTagInDb(tag, newsKey) {
                 //do something like count?
                 doublet=true;
                 writeTagToNews(tag, newsKey, tagKey);
+                console.log("doublet "+tag.id+" "+tagKey);
             }
         }
 

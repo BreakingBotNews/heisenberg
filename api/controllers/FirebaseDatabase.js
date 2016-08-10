@@ -3,14 +3,17 @@
  */
 var config = require('../../config/config');
 var firebase = require('firebase');
+var path = require('path');
 
 
 /**
  * Here we initilize firebaseUsers and export the database connection.
  */
 
+var firebasePath = path.resolve(__dirname, '../../config/firebase_config.json');
+
 firebase.initializeApp({
-    serviceAccount: './config/firebase_config.json',
+    serviceAccount: firebasePath,//'./config/firebase_config.json',
     databaseURL: config.firebaseDatabaseURL
 });
 
