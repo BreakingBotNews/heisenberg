@@ -12,6 +12,6 @@ module.exports = {
     },
     
     endProgram: function () {
-        setTimeout(function(){process.exit(0)}, 2000);
+        setTimeout(function(){process.exit(0)}, 10000);
     }
 };

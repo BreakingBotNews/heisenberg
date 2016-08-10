@@ -37,6 +37,7 @@ function callGuardian(lastDb){
                 //write to db or omit
                 if(!doublet){
                     var key = ref.push();
+                    //console.log(key.key);
                     key.set({
                         id: helper.testContentAvailability(result.id),
                         url: helper.testContentAvailability(result.webUrl),
@@ -55,7 +56,7 @@ function callGuardian(lastDb){
                         shortUrl: helper.testContentAvailability(result.fields.shortUrl),
                         thumbnail: helper.testContentAvailability(result.fields.thumbnail),
                         language: helper.testContentAvailability(result.fields.lang),
-                        tags: writeTagsToNews(result.tags)
+                        tags: false
                     },function(error){
                         if(error){
                             console.log("Guardian: Error writing to db");
@@ -64,8 +65,7 @@ function callGuardian(lastDb){
                           //  console.log("Guardian: One article written to db");
                         }
                     });
-                    //categories, tags, place, country etc. missing
-                    //function call and set via key. with promise? .then()?
+                    writeTags(result.tags, key.key);
                 }
             }
             console.log("Guardian: written to db");
@@ -74,40 +74,48 @@ function callGuardian(lastDb){
     })
 };
 
-function writeTagsToNews(data){
-    var returnTags=[];
-
-    for (var i=0; i<data.length; i++){
-        var tag = data[i];
-        checkTagInDb(tag);
-        //write data into obj
-        returnTags[i]= {
-            id: tag.id,
-            webTitle: tag.webTitle
-        }    
+function writeTags(tags,newsKey){
+    if(tags) {
+        for (var i = 0; i < tags.length; i++) {
+            var tag = tags[i];
+            checkTagInDb(tag, newsKey);
+        }
     }
-    
-    //return obj with all keys and webTitle
-    return returnTags;
+}
+
+function writeTagToNews(tag, newsKey, tagKey){
+    var ref = firebase.ref('news/guardian/'+newsKey+'/tags/');
+
+    var key = ref.push();
+
+    key.set({
+        idGuardian: tag.id,
+        id: tagKey,
+        webTitle: tag.webTitle,
+        type: tag.type
+    })
 };
 
-function checkTagInDb(tag) {
-    var ref = firebase.ref('meta/guardian/')
+function checkTagInDb(tag, newsKey) {
+    var ref = firebase.ref('meta/guardian/');
     ref.once("value", function (snapshot) {
         var db = snapshot.val();
         var doublet=false;
 
         //see if tag is in our meta db
-        for (var k in db){
-            if(k===tag.id){
+        for (var tagKey in db){
+            if(db[tagKey].id===tag.id){
                 //do something like count?
                 doublet=true;
+                writeTagToNews(tag, newsKey, tagKey);
             }
         }
 
         //if no, write it
         if(!doublet){
-            ref = firebase.ref('meta/guardian/'+tag.id).set({ //tag.id is a path, so it is actually divided here already
+            ref = firebase.ref('meta/guardian/');
+            var key = ref.push();
+            key.set({
                 id: helper.testContentAvailability(tag.id),
                 type: helper.testContentAvailability(tag.type),
                 sectionId: helper.testContentAvailability(tag.sectionId),
@@ -116,11 +124,12 @@ function checkTagInDb(tag) {
                 webUrl: helper.testContentAvailability(tag.webUrl),
                 apiUrl: helper.testContentAvailability(tag.apiUrl),
                 references: helper.testContentAvailability(tag.references)
-            })
+            });
+            writeTagToNews(tag, newsKey, key.key);
         }
         
     }, function (errorObject) {
-        console.log("The read to meta db failed: " + errorObject.code);
+        console.log("The save to meta db failed: " + errorObject.code);
     });
 
 };
@@ -139,4 +148,4 @@ function startGuardian () {
 
 module.exports = {
     startGuardian: startGuardian
-}
+};
