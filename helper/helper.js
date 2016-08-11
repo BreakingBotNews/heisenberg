@@ -13,5 +13,13 @@ module.exports = {
     
     endProgram: function () {
         setTimeout(function(){process.exit(0)}, 10000);
+    },
+    
+    objLength: function(obj){
+        var length = 0;
+        for (var i in obj){
+            length++;
+        }
+        return length;
     }
 };

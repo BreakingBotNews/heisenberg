@@ -4,7 +4,7 @@
 var request = require('request');
 //var config = require('./config/config');
 var firebase = require('../api/controllers/FirebaseDatabase');
-//var helper = require("./helper/helper");
+var helper = require("../helper/helper");
 
 function cleanDoublets(dbPath, key){ //key and path: string
     var ref = firebase.ref(dbPath);
@@ -22,7 +22,11 @@ function cleanDoublets(dbPath, key){ //key and path: string
                 }
             }
         }
+        console.log(helper.objLength(db));
+        console.log("end");
+        helper.endProgram();
     });
 }
 
-cleanDoublets("meta/guardian/","id");
+//cleanDoublets("meta/guardian/","id");
+cleanDoublets("news/guardian/","id")
