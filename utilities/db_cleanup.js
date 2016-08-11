@@ -5,6 +5,7 @@ var request = require('request');
 //var config = require('./config/config');
 var firebase = require('../api/controllers/FirebaseDatabase');
 var helper = require("../helper/helper");
+//var spider = require("../spider/spider");
 
 function cleanDoublets(dbPath, key){ //key and path: string
     var ref = firebase.ref(dbPath);
@@ -29,4 +30,4 @@ function cleanDoublets(dbPath, key){ //key and path: string
 }
 
 //cleanDoublets("meta/guardian/","id");
-cleanDoublets("news/guardian/","id")
+cleanDoublets("news/guardian/","id");
