@@ -1,7 +1,7 @@
 /**
  * Created by Admin on 08.08.2016.
  */
-var config = require('../../config/config');
+var config = require('./config');
 var firebase = require('firebase');
 var path = require('path');
 

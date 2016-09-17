@@ -4,7 +4,7 @@
 //modify db in callGuardian, modify module (publication vs modify date etc),
 var request = require('request');
 var config = require('./config/config');
-var firebase = require('./api/controllers/FirebaseDatabase');
+var firebase = require('./controllers/FirebaseDatabase');
 var helper = require("./helper/helper");
 
 var baseUrl="http://content.guardianapis.com/search?";

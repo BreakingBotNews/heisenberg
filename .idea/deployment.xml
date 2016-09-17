@@ -5,7 +5,7 @@
       <paths name="heisenberg to bot2">
         <serverdata>
           <mappings>
-            <mapping deploy="/heisenberg" local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

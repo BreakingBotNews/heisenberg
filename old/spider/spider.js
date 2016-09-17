@@ -1,8 +1,8 @@
 var request = require ('request');
 var cheerio = require ('cheerio');
-var firebase = require('../api/controllers/FirebaseDatabase');
-var helper = require("../helper/helper");
-var config = require("../config/spiderConfig")
+var firebase = require('./FirebaseDatabase');
+var helper = require("./helper");
+var config = require("./spiderConfig")
 
 function start(){
     for (var i=0; i<config.sitesToVisit.length; i++){

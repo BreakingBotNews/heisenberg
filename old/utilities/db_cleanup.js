@@ -3,7 +3,7 @@
  */
 var request = require('request');
 //var config = require('./config/config');
-var firebase = require('../api/controllers/FirebaseDatabase');
+var firebase = require('./FirebaseDatabase');
 var helper = require("../helper/helper");
 //var spider = require("../spider/spider");
 
