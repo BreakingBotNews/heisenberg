@@ -1,5 +1,6 @@
 var express = require('express');
 var config = require('../config/config.json');
+var db = require('../dbController/query');
 
 var router = express.Router();
 
@@ -14,23 +15,37 @@ router.use(function (req,res,next) {
     }
 });
 //routes
-router.get('/', function (req, res) {
-    res.json({message: "works!"});
-});
+router.route('/user').post(function (req,res){
+    if(req.body.query) {
+        var condition = req.body.query.condition;
+        var fields = req.body.fields || "*"
+        
+        if(fields!=="*"){
+            var array = fields;
+            fields = "";
+            for(var i=0;i<array.length;i++){
+                fields+=array[i];
+                if(i<array.length-1){
+                    fields+=", ";
+                }
+            }
+        }
 
-router.route('/user').post(function (req,res) {
-    console.log(req.body.name);
-    res.json({message:"Message received"});
-}).get(function (req,res) {
-    //console.log(req.headers.name); //name is custom written into headers
-    console.log(req.params);
+        var query = "SELECT "+fields+" FROM user WHERE "+condition+";";
+        db.read(query,function (result) {
+            //res.json({success:true});
+            res.json(result);
+        });
+        return;
+    }
     console.log(req.body);
-    res.json({message:"get received"});
+    res.json({message:"Message received, but I don't understand your request"});
 });
 
-router.route('/user/:fbId').get(function (req,res) {
-    console.log(req.params.fbId);
-    res.json({message:"I found a fbId"});
+router.route('/article').post(function (req, res) {
+    console.log(req.body);
+    res.json({message:"Message received"});
 });
+
 
 module.exports = router;
