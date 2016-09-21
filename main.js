@@ -14,8 +14,9 @@ var testObjekt = {
     };
 
 
-axios.post('http://localhost:8080/api/user?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
+axios.post('https://bot2.schaula.uberspace.de/heisenberg/api/user?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
     function (response) {
+        console.log(response);
         console.log(response.data);
     });
 
