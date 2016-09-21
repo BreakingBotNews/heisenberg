@@ -14,7 +14,7 @@ var axios = require('axios');
     };
 */
 var testObjekt = {
-    delete: {
+    keyWordSearch: {
         condition: "id = 5"
     }
 };
@@ -25,7 +25,7 @@ var testObjekt = {
         console.log(response.data);
     });**/
 
-axios.post('http://localhost:65241/api/user?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
+axios.post('http://localhost:65241/api/article?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
     function (response) {
         console.log(response.data);
     });

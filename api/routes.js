@@ -74,8 +74,26 @@ router.route('/user').post(function (req,res){
 
 //article endpoint
 router.route('/article').post(function (req, res) {
+
+    //keyWordSearch
+    if(req.body.keyWordSearch){
+        res.json({message:"Sorry this part isn't build yet.(keyWordSearch)"});
+        /*
+         keyword(""), source (opt), section (opt), sortBy (opt,:latest, popular, important), length
+         */
+    }
+
+    //summaryRequest
+    if(req.body.summaryRequest){
+        res.json({message:"Sorry this part isn't build yet. (summaryRequest)"});
+        /*
+         userId/FbId, length
+         */
+    }
+
+    //fallback
     console.log(req.body);
-    res.json({message:"Message received"});
+    res.json({message:"Message received, but I don't understand your request"});
 });
 
 //helper
