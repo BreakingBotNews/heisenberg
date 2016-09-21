@@ -20,12 +20,12 @@ var testObjekt = {
 };
 
 
-/*axios.post('https://bot2.shaula.uberspace.de/heisenberg/api/user?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
-    function (response) {
-        console.log(response.data);
-    });**/
-
-axios.post('http://localhost:65241/api/article?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
+axios.post('https://bot2.shaula.uberspace.de/heisenberg/api/article?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
     function (response) {
         console.log(response.data);
     });
+
+/*axios.post('http://localhost:65241/api/article?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
+    function (response) {
+        console.log(response.data);
+    });*/

@@ -81,6 +81,7 @@ router.route('/article').post(function (req, res) {
         /*
          keyword(""), source (opt), section (opt), sortBy (opt,:latest, popular, important), length
          */
+        return;
     }
 
     //summaryRequest
@@ -89,6 +90,7 @@ router.route('/article').post(function (req, res) {
         /*
          userId/FbId, length
          */
+        return;
     }
 
     //fallback
