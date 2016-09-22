@@ -2,6 +2,7 @@ var request = require('request');
 var config = require('../config/config');
 var helper = require("../helper/helper");
 var db = require("../dbController/query");
+var breaking = require('../eval/breaking');
 
 var baseUrl="http://content.guardianapis.com/search?";
 var query="show-tags=all&show-elements=all&show-references=all&show-fields=all";
@@ -55,6 +56,7 @@ function callAPI(lastDb) {
 
 function writeArticle(result,queryData) {
     db.write('article',queryData,function(dbResults){
+        breaking.evalBreaking(queryData);
         writeTags(dbResults.insertId, result.tags);
         writeSection (dbResults.insertId, result.sectionId);
     });
