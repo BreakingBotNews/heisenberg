@@ -167,6 +167,7 @@ function writeSection(articleId, section){
 function startGuardian (){
     var dbQuery='SELECT externalID AS id FROM article WHERE source = 1 ORDER BY creationDate DESC LIMIT 0,'+config.articleLoadedFromDbLimit;
     db.read(dbQuery, callAPI);
+    console.log(process.version);
 };
 
 module.exports = {

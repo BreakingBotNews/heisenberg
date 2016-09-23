@@ -20,8 +20,6 @@ function evalBreaking(article){
     });
 }
 
-evalBreaking({headline:"Sack Reis fällt in China um"});
-
 module.exports = {
     evalBreaking: evalBreaking
 };
