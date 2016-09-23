@@ -13,7 +13,8 @@ function evalBreaking(article){
         for (var i=0;i<result.length;i++){
             var data = {
                 fbId:result[i].id,
-                headline:article.headline
+                headline:article.headline,
+                shortURL:article.shortURL
             };
             webhook.send(data);
         }
