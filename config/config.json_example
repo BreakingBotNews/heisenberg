@@ -8,5 +8,6 @@ Remove comments before using.
   "dbConnectionLimit":100,
   "guardianAPI":"", // Guardian API Key
   "articleLoadedFromDbLimit": "1000",
-  "articleRequestedFromGuardian": "30"
+  "articleRequestedFromGuardian": "30",
+  "dataJobsPerHour": 12
 }
