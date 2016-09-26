@@ -42,7 +42,7 @@ function callAPI(lastDb) {
                         wordcount: helper.testContentAvailability(result.fields.wordcount),
                         firstPublicationDate: helper.testContentAvailability(result.fields.firstPublicationDate),
                         lastModified: helper.testContentAvailability(result.fields.lastModified),
-                        shortUrl: helper.testContentAvailability(result.fields.shortUrl),
+                        shortURL: helper.testContentAvailability(result.fields.shortUrl),
                         thumbnailURL: helper.testContentAvailability(result.fields.thumbnail),
                         language: helper.testContentAvailability(result.fields.lang)
                     };
