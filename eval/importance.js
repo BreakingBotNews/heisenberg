@@ -42,7 +42,7 @@ function updateArticle(result) {
         if(i>result.length-2){
             setTimeout(function () {
                 helper.endProgram();  
-            },10000);
+            },15000);
         }
     }
 }

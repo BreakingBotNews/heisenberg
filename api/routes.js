@@ -1,6 +1,7 @@
 var express = require('express');
 var config = require('../config/config.json');
 var db = require('../dbController/query');
+var functionality = require('./functionality');
 
 var router = express.Router();
 
@@ -86,10 +87,14 @@ router.route('/article').post(function (req, res) {
 
     //summaryRequest
     if(req.body.summaryRequest){
-        res.json({message:"Sorry this part isn't build yet. (summaryRequest)"});
+        //res.json({message:"Sorry this part isn't build yet. (summaryRequest)"});
         /*
          userId/FbId, length
          */
+        var summaryRequest = req.body.summaryRequest;
+        functionality.summaryGlobalImportance(summaryRequest.length, function (result) {
+            res.json(result);
+        });
         return;
     }
 
