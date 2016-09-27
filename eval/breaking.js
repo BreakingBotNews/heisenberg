@@ -13,6 +13,7 @@ function evalBreaking(article){
         for (var i=0;i<result.length;i++){
             var data = {
                 fbId:result[i].id,
+                template: false,
                 headline:article.headline,
                 shortURL:article.shortURL
             };
