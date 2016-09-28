@@ -70,21 +70,23 @@ router.route('/user').post(function (req,res){
 
     //subscription
     if(req.body.subscription){
-        var subscription = req.body.subsciption;
-        if(subscription.delete){
-            condition = 'user='+subscription.user+', time='+subscription.time;
-            db.del('subscription',condition,function (result) {
+        if(req.body.subscription.delete){
+            condition = 'user='+req.body.subscription.user+' AND time='+req.body.subscription.time;
+            db.del('subscriptions',condition,function (result) {
                 //console.log(result);
+                res.json(result);
             })
         }else{
             data = {
-                user: subscription.user,
-                time: subscription.time
+                user: req.body.subscription.user,
+                time: req.body.subscription.time
             };
             db.replace('subscriptions',data,function (result) {
                 //console.log(result);
+                res.json(result);
             })
         }
+        return;
     }
 
     //fallback
