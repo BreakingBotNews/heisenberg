@@ -68,6 +68,25 @@ router.route('/user').post(function (req,res){
         return;
     }
 
+    //subscription
+    if(req.body.subscription){
+        var subscription = req.body.subsciption;
+        if(subscription.delete){
+            condition = 'user='+subscription.user+', time='+subscription.time;
+            db.del('subscription',condition,function (result) {
+                //console.log(result);
+            })
+        }else{
+            data = {
+                user: subscription.user,
+                time: subscription.time
+            };
+            db.replace('subscriptions',data,function (result) {
+                //console.log(result);
+            })
+        }
+    }
+
     //fallback
     console.log(req.body);
     res.json({message:"Message received, but I don't understand your request"});
