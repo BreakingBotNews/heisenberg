@@ -8,7 +8,7 @@ var router = express.Router();
 //middleware
 router.use(function (req,res,next) {
     //authentication check here
-    if(req.query.apiKey===config.apiKey){
+    if(req.query.apiKey===config.apiKey || (req.query.u && req.query.s)){
         next();
     }
     else{
@@ -23,6 +23,12 @@ router.route('/user').post(function (req,res){
     var fields;
     var query;
     var data;
+
+    //security
+    if(req.query.u || req.query.s){
+        res.json({error:"Please provide a valid API Key"})
+        return;
+    }
 
     //query
     if(req.body.query) {
@@ -96,6 +102,12 @@ router.route('/user').post(function (req,res){
 
 //article endpoint
 router.route('/article').post(function (req, res) {
+    
+    //security
+    if(req.query.u || req.query.s){
+        res.json({error:"Please provide a valid API Key"})
+        return;
+    }
 
     //keyWordSearch
     if(req.body.keyWordSearch){
@@ -124,6 +136,34 @@ router.route('/article').post(function (req, res) {
     res.json({message:"Message received, but I don't understand your request"});
 });
 
+router.route('/settings').post(function (req, res) {
+    var query = 'SELECT fbId FROM user WHERE id='+req.query.u;
+    db.read(query, function (result) {
+        if(cutString(result[0].fbId.toString())===req.query.s){
+            functionality.saveFbData(req.body.fbData, req.body.user, function () {
+                res.json({message:"Success"});
+            })
+        }
+        else{
+            res.json({error:"Please provide a valid API Key"+cutString(result[0].fbId.toString())});
+            return;
+        }
+    });
+});
+
+router.route('/settings').get(function (req, res) {
+    var query = 'SELECT fbId FROM user WHERE id='+req.query.u;
+    db.read(query, function (result) {
+        if(cutString(result[0].fbId.toString())===req.query.s){
+            res.json({message:"results for article and themes are supposed to be here"});
+        }
+        else{
+            res.json({error:"Please provide a valid API Key"+cutString(result[0].fbId.toString())});
+            return;
+        }
+    });
+});
+
 //helper
 function valFields(fields, standard) {
     if(fields){
@@ -140,6 +180,10 @@ function valFields(fields, standard) {
     else{
         return standard;
     }
+}
+
+function cutString(string) {
+    return string.slice(4,8);
 }
 
 module.exports = router;

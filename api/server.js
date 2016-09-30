@@ -1,11 +1,13 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var config = require('../config/config.json')
+var config = require('../config/config.json');
+var cors = require('cors');
 
 var app = express();
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
+app.use(cors());
 
 var port = process.env.PORT || config.port;
 
