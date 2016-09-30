@@ -21,7 +21,7 @@ function saveFbData(fbData, user, callback) {
 
 function saveLikeData(likes,user,callback) {
     for(var i=0; i<likes.length;i++){
-        if(i<likes.length-2){
+        if(i>likes.length-2){
             getLikeEntity(likes[i],user,callback);
             console.log("Gave out real callback");
         }else{
@@ -31,10 +31,11 @@ function saveLikeData(likes,user,callback) {
 }
 
 function getLikeEntity(like,user,callback) {
-    var query = 'SELECT id FROM likeEntities WHERE externalId='+like.id;
+    var condition = like.id.toString();
+    var query = 'SELECT id, externalId FROM likeEntities WHERE externalId='+condition;
     db.read(query,function (result) {
         if(result[0]){
-            writeUserLikes(result[i].id,user,callback);
+            writeUserLikes(result[0].id,user,callback);
         }
         else{
             getLikeCategory(like,user,callback)
@@ -47,7 +48,7 @@ function writeUserLikes(entity,user,callback) {
         user: user,
         likeEntity: entity
     };
-    db.write('userLikes',data,function (result) {
+    db.replace('userLikes',data,function (result) {
         //console.log("userLikes written");
         if(callback){
             callback();
@@ -56,7 +57,8 @@ function writeUserLikes(entity,user,callback) {
 }
 
 function getLikeCategory(like,user,callback) {
-    var query = 'SELECT * FROM likeCategories WHERE name='+like.category;
+    var condition = like.category.toString();
+    var query = "SELECT id FROM likeCategories WHERE name='"+condition+"'";
     db.read(query,function (result) {
         if(result[0]){
             writeEntity(like,user,result[0].id,callback);
