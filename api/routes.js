@@ -2,6 +2,7 @@ var express = require('express');
 var config = require('../config/config.json');
 var db = require('../dbController/query');
 var functionality = require('./functionality');
+var standardQuery = require('../dbController/standardQuerys');
 
 var router = express.Router();
 
@@ -127,6 +128,11 @@ router.route('/article').post(function (req, res) {
         var summaryRequest = req.body.summaryRequest;
         functionality.summaryGlobalImportance(summaryRequest.length, function (result) {
             res.json(result);
+            var aids = [];
+            for(var j=0; j<result.length; j++){
+                aids.push(result[j].id);
+            }
+            standardQuery.saveArticlesSendToUser(summaryRequest.id,aids);
         });
         return;
     }
@@ -136,12 +142,15 @@ router.route('/article').post(function (req, res) {
     res.json({message:"Message received, but I don't understand your request"});
 });
 
+//settings endpoint
+
+//write fbData into db
 router.route('/settings').post(function (req, res) {
     var query = 'SELECT fbId FROM user WHERE id='+req.query.u;
     db.read(query, function (result) {
-        if(cutString(result[0].fbId.toString())===req.query.s){
+        if(cutString(result[0].fbId.toString())===req.query.s){ //if result=undefinded ->crash BUG!
             functionality.saveFbData(req.body.fbData, req.body.user, function () {
-                res.json({message:"Success"});
+                res.json({message:"success"});
             })
         }
         else{
@@ -151,6 +160,7 @@ router.route('/settings').post(function (req, res) {
     });
 });
 
+//get themes and last article
 router.route('/settings').get(function (req, res) {
     var query = 'SELECT fbId FROM user WHERE id='+req.query.u;
     db.read(query, function (result) {

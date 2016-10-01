@@ -2,7 +2,8 @@ var db = require('../dbController/query');
 var helper = require('../helper/helper');
 var config = require('../config/config.json');
 var webhook = require('../api/webhook');
-var functionality = require('../api/functionality')
+var functionality = require('../api/functionality');
+var standardQuery = require('../dbController/standardQuerys');
 
 function sendSummarys() {
     console.log('sendSummarys invoked');
@@ -12,6 +13,12 @@ function sendSummarys() {
 
     db.read(query, function (user) {
         functionality.summaryGlobalImportance(5,function (articles) {
+            var aids = [];
+
+            for(var j=0; j<articles.length; j++){
+                aids.push(articles[j].id);
+            }
+
             for (var i=0; i<user.length; i++){
                 
                 var data = {
@@ -20,6 +27,9 @@ function sendSummarys() {
                     articles: articles
                 };
                 webhook.send(data);
+
+                standardQuery.saveArticlesSendToUser(user,aids);
+
                 if(i>user.length-2){
                     setTimeout(function () {
                         helper.endProgram();
