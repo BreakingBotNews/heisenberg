@@ -144,7 +144,7 @@ router.route('/article').post(function (req, res) {
 
 //settings endpoint
 
-//write fbData into db
+    //write fbData into db
 router.route('/settings').post(function (req, res) {
     var query = 'SELECT fbId FROM user WHERE id='+req.query.u;
     db.read(query, function (result) {
@@ -160,18 +160,48 @@ router.route('/settings').post(function (req, res) {
     });
 });
 
-//get themes and last article
+    //get themes and last article
 router.route('/settings').get(function (req, res) {
     var query = 'SELECT fbId FROM user WHERE id='+req.query.u;
     db.read(query, function (result) {
         if(cutString(result[0].fbId.toString())===req.query.s){
-            res.json({message:"results for article and themes are supposed to be here"});
+            functionality.getArticleThemes(req.query.u,function (articles,themes) {
+                res.json({articles:articles,themes:themes});
+            });
         }
         else{
             res.json({error:"Please provide a valid API Key"+cutString(result[0].fbId.toString())});
             return;
         }
     });
+});
+
+//internal tools
+router.route('/tools').post(function (req,res) {
+    //security
+    if(req.query.u || req.query.s){
+        res.json({error:"Please provide a valid API Key"});
+        return;
+    }
+    //write data
+    if(req.body){
+        //write to sectionLikeCategorieMapping : section, likeCategorie
+    }
+});
+
+router.route('/tools').get(function (req, res) {
+    //security
+    if(req.query.u || req.query.s){
+        res.json({error:"Please provide a valid API Key"});
+        return;
+    }
+    functionality.getIdsAndLikeCat(function (sections, categories) {
+       res.json({
+           sections: sections,
+           categories: categories
+       });
+    });
+    //get * from section IDs and * likeCategories
 });
 
 //helper

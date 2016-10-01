@@ -3,6 +3,7 @@ var helper = require('../helper/helper');
 var config = require('../config/config.json');
 var userPref = require('../eval/userPref');
 
+//article functionality
 function summaryGlobalImportance(length, callback) {
     var query = 'SELECT * FROM article ORDER BY importance DESC LIMIT 0,'+length;
     db.read(query,function (result) {
@@ -10,6 +11,43 @@ function summaryGlobalImportance(length, callback) {
     });
 }
 
+//settings functionality
+function getArticlesThemes(user,callback) {
+    getArticles(user,callback);
+}
+
+function getArticles(user,callback) {
+    var query = 'SELECT article.headline, article.trailText, articlesSendToUser.timestamp FROM articlesSendToUser' +
+        ' JOIN article ON articlesSendToUser.article=article.id WHERE articlesSendToUser.user='+user+' ORDER BY articlesSendToUser.timestamp DESC LIMIT 0,10;';
+    db.read(query,function (result) {
+        getThemes(user,result,callback);
+    });
+}
+
+function getThemes(user,articles,callback) {
+    var query = 'SELECT sectionIDs.name FROM userSectionPref JOIN sectionIDs ON userSectionPref.section=sectionIDs.id WHERE userSectionPref.user='+user+' ORDER BY userSectionPref.percentage DESC LIMIT 0,10;'; //JOIN
+    db.read(query, function (result) {
+        callback(articles,result);
+    });
+}
+
+//tools functionality
+
+function getIdsAndLikeCat(callback) {
+    var query = 'SELECT * FROM sectionIDs';
+    db.read(query,function (result) {
+        getLikeCat(result, callback);
+    });
+}
+
+function getLikeCat(sections, callback) {
+    var query = 'SELECT * FROM likeCategories';
+    db.read(query, function (result) {
+       callback(sections,result); 
+    });
+}
+
+//fbData functionality
 function saveFbData(fbData, user, callback) {
     db.update('user',{hometown:fbData.hometown.location.city},'id='+user,function (result) {
        //console.log("hometown written");
@@ -93,5 +131,7 @@ function writeEntity(like,user,cid,callback) {
 
 module.exports = {
     summaryGlobalImportance: summaryGlobalImportance,
-    saveFbData: saveFbData
+    saveFbData: saveFbData,
+    getArticleThemes: getArticlesThemes,
+    getIdsAndLikeCat: getIdsAndLikeCat
 };
