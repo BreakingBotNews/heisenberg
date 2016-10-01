@@ -9,7 +9,7 @@ function sendSummarys() {
     console.log('sendSummarys invoked');
     var date = new Date();
     var currentHour = date.getHours();
-    var query = 'SELECT user.fbId FROM subscriptions JOIN user ON subscriptions.user=user.id WHERE subscriptions.time = '+currentHour;
+    var query = 'SELECT user.fbId, user.id FROM subscriptions JOIN user ON subscriptions.user=user.id WHERE subscriptions.time = '+currentHour;
 
     db.read(query, function (user) {
         functionality.summaryGlobalImportance(5,function (articles) {
@@ -28,7 +28,7 @@ function sendSummarys() {
                 };
                 webhook.send(data);
 
-                standardQuery.saveArticlesSendToUser(user,aids);
+                standardQuery.saveArticlesSendToUser(user[i].id,aids);
 
                 if(i>user.length-2){
                     setTimeout(function () {
