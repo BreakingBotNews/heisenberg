@@ -1,6 +1,7 @@
 var db = require('../dbController/query');
 var helper = require('../helper/helper');
 var config = require('../config/config.json');
+var userPref = require('../eval/userPref');
 
 function summaryGlobalImportance(length, callback) {
     var query = 'SELECT * FROM article ORDER BY importance DESC LIMIT 0,'+length;
@@ -23,7 +24,7 @@ function saveLikeData(likes,user,callback) {
     for(var i=0; i<likes.length;i++){
         if(i>likes.length-2){
             getLikeEntity(likes[i],user,callback);
-            console.log("Gave out real callback");
+            //console.log("Gave out real callback");
         }else{
             getLikeEntity(likes[i],user,false);
         }
@@ -38,7 +39,7 @@ function getLikeEntity(like,user,callback) {
             writeUserLikes(result[0].id,user,callback);
         }
         else{
-            getLikeCategory(like,user,callback)
+            getLikeCategory(like,user,callback);
         }
     })
 }
@@ -51,7 +52,7 @@ function writeUserLikes(entity,user,callback) {
     db.replace('userLikes',data,function (result) {
         //console.log("userLikes written");
         if(callback){
-            callback();
+            userPref.evalUserPrefs(user,callback);
         }
     })
 }
