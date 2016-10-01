@@ -13,7 +13,7 @@ router.use(function (req,res,next) {
         next();
     }
     else{
-        res.json({error:"Please provide a valid API Key"})
+        res.json({error:"Please provide a valid API Key: toplevel"})
     }
 });
 //routes
@@ -154,7 +154,7 @@ router.route('/settings').post(function (req, res) {
             })
         }
         else{
-            res.json({error:"Please provide a valid API Key"+cutString(result[0].fbId.toString())});
+            res.json({error:"Please provide a valid API Key"});
             return;
         }
     });
@@ -170,7 +170,7 @@ router.route('/settings').get(function (req, res) {
             });
         }
         else{
-            res.json({error:"Please provide a valid API Key"+cutString(result[0].fbId.toString())});
+            res.json({error:"Please provide a valid API Key"});
             return;
         }
     });
@@ -180,7 +180,7 @@ router.route('/settings').get(function (req, res) {
 router.route('/tools').post(function (req,res) {
     //security
     if(req.query.u || req.query.s){
-        res.json({error:"Please provide a valid API Key"});
+        res.json({error:"Please provide a valid API Key 1"});
         return;
     }
     //write data
@@ -192,7 +192,7 @@ router.route('/tools').post(function (req,res) {
 router.route('/tools').get(function (req, res) {
     //security
     if(req.query.u || req.query.s){
-        res.json({error:"Please provide a valid API Key"});
+        res.json({error:"Please provide a valid API Key 1"});
         return;
     }
     functionality.getIdsAndLikeCat(function (sections, categories) {

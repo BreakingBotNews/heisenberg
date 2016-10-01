@@ -1,18 +1,19 @@
 var db = require("./dbController/query");
 var helper = require("./helper/helper");
 var axios = require('axios');
+var config = require('./config/config.json');
 
-/*var testObjekt = {
+var testObjekt = {
     query: {
-        condition: "id = 1"
+        condition: "id = 6"
         },
     fields: [
-        "name",
+        "firstname",
         "id",
         "fbID"
         ]
     };
-
+/*
 var testObjekt = {
     keyWordSearch: {
         condition: "id = 5"
@@ -20,18 +21,23 @@ var testObjekt = {
 };
 
 1043117445737068
-*/
+
 
 var testObjekt = {
     fbId: 1043117445737068,
     headline: "Sack Reis fällt in China um"
 };
 
-axios.post('https://bot.aries.uberspace.de/pinkman/internalApi/webhook/article?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
+var query = 'SELECT id, externalId FROM likeEntities WHERE externalId=2';
+db.read(query,function (result) {
+    console.log(result);
+})
+*/
+/*axios.post('https://bot.aries.uberspace.de/pinkman/internalApi/webhook/article?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
     function (response) {
         console.log(response.data);
-    });
-/*axios.post('https://bot2.shaula.uberspace.de/heisenberg/api/article?apiKey=pK8TyE%26f7PTdu$SkS9jDEETVMkha%26k_xzwV^sGW7FgH3n?DE',testObjekt).then(
+    });*/
+axios.post('https://bot2.shaula.uberspace.de/heisenberg/api/user?apiKey='+config.apiKey,testObjekt).then(
     function (response) {
         console.log(response.data);
     });
