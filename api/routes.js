@@ -185,7 +185,13 @@ router.route('/tools').post(function (req,res) {
     }
     //write data
     if(req.body){
-        //write to sectionLikeCategorieMapping : section, likeCategorie
+        var data = {
+            section: req.body.section,
+            likeCategorie: req.body.likeCategorie
+        };
+        db.replace('sectionLikeCategorieMapping',data,function (result) {
+            //console.log(result);
+        });
     }
 });
 
@@ -201,7 +207,6 @@ router.route('/tools').get(function (req, res) {
            categories: categories
        });
     });
-    //get * from section IDs and * likeCategories
 });
 
 //helper
