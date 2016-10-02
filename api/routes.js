@@ -183,15 +183,25 @@ router.route('/tools').post(function (req,res) {
         res.json({error:"Please provide a valid API Key 1"});
         return;
     }
+    console.log("Tools post");
     //write data
     if(req.body){
-        var data = {
-            section: req.body.section,
-            likeCategorie: req.body.likeCategorie
-        };
-        db.replace('sectionLikeCategorieMapping',data,function (result) {
-            //console.log(result);
+        var category = req.body.category;
+        var sections = req.body.sections;
+        condition = "likeCategorie="+category;
+
+        db.del('sectionLikeCategorieMapping',condition, function (r) {
+            for (var i=0; i<sections.length; i++){
+                var data = {
+                    likeCategorie: category,
+                    section: sections[i]
+                };
+                db.write('sectionLikeCategorieMapping',data,function (result) {
+                    //console.log(result");
+                });
+            }
         });
+        res.json({message:"success"});
     }
 });
 
