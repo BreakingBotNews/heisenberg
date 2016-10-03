@@ -53,12 +53,10 @@ function countSections(categories, user, callback) {
 
 function writeUserSectionPref(sectionCount,categorieCount,user, callback) {
     for(var i in sectionCount){
-       var percent =(sectionCount[i]*100)/categorieCount;
-        percent = Math.round(percent);
         var data = {
             user: user,
             section: i,
-            percentage: percent
+            count: sectionCount[i]
         };
         if(i>sectionCount.length-2){
             db.write('userSectionPref', data, function (result) {

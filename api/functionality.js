@@ -25,7 +25,7 @@ function getArticles(user,callback) {
 }
 
 function getThemes(user,articles,callback) {
-    var query = 'SELECT sectionIDs.name FROM userSectionPref JOIN sectionIDs ON userSectionPref.section=sectionIDs.id WHERE userSectionPref.user='+user+' ORDER BY userSectionPref.percentage DESC LIMIT 0,10;'; //JOIN
+    var query = 'SELECT sectionIDs.name FROM userSectionPref JOIN sectionIDs ON userSectionPref.section=sectionIDs.id WHERE userSectionPref.user='+user+' ORDER BY userSectionPref.count DESC LIMIT 0,10;'; //JOIN
     db.read(query, function (result) {
         callback(articles,result);
     });
