@@ -132,7 +132,7 @@ router.route('/article').post(function (req, res) {
             for(var j=0; j<result.length; j++){
                 aids.push(result[j].id);
             }
-            standardQuery.saveArticlesSendToUser(summaryRequest.id,aids);
+            standardQuery.saveArticlesSendToUser(summaryRequest.fbId,aids); //id?
         });
         return;
     }

@@ -16,7 +16,9 @@ function evalBreaking(article){
                 fbId:result[i].id,
                 template: false,
                 headline:article.headline,
-                shortURL:article.shortURL
+                articleURL:article.articleURL,
+                thumbnailURL: article.thumbnailURL,
+                trailText: article.trailText
             };
             webhook.send(data);
         }
