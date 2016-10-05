@@ -55,6 +55,9 @@ function saveFbData(fbData, user, callback) {
     db.update('user',{currentResidenz:fbData.location.location.city},'id='+user,function (result) {
        //console.log("currentResidenz written");
     });
+    db.update('user',{loginId:fbData.id},'id='+user,function (result) {
+        //console.log("loginId");
+    });
     saveLikeData(fbData.likes.data,user,callback);
 }
 

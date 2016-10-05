@@ -176,6 +176,20 @@ router.route('/settings').get(function (req, res) {
     });
 });
 
+//login verification
+router.route('/settings/verify').get(function (req, res) {
+    var query = 'SELECT fbId, loginId FROM user WHERE id='+req.query.u;
+    db.read(query, function (result) {
+        if(cutString(result[0].fbId.toString())===req.query.s&&req.query.l===result[0].loginId.toString()){
+            res.json({success: "Logged In"});
+        }
+        else{
+            res.json({error:"User Id and Facebook account not matching"});
+            return;
+        }
+    });
+});
+
 //internal tools
 router.route('/tools').post(function (req,res) {
     //security
