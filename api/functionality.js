@@ -11,6 +11,92 @@ function summaryGlobalImportance(length, callback) {
     });
 }
 
+function summaryPersonalImportance(uId,length,callback) {
+    //get top LENGTH categories of user
+    var query = 'SELECT * FROM userSectionPref WHERE user='+uId+' ORDER BY count DESC LIMIT 0,'+length;
+    db.read(query,function (result) {
+        pGetArticles(result,length,callback,0,[]);
+    });
+}
+//get top 10 articles for each Category together -> make list
+function pGetArticles(sections,length,callback,i,obj) {
+    if(length>i){
+        var query = 'SELECT * FROM article WHERE sectionID='+sections[i].section+' ORDER BY importance DESC LIMIT 0,10';
+        db.read(query, function (res) {
+            obj[i]=res;
+            i++;
+            pGetArticles(sections,length,callback,i,obj)
+        })
+    }
+    else{
+        getTags(obj,sections,length,callback,0,0);
+    }
+}
+//get Tags to Articles //user über sections.user
+function getTags(articles, sections, length,callback,i,j) {
+    if(length>i){
+        if(j<10){
+            var query = 'SELECT * FROM tagsOfArticles LEFT JOIN tags ON tagsOfArticles.tag = tags.id WHERE tagsOfArticles.article='+articles[i][j].id;
+            db.read(query, function (result) {
+                articles[i][j].tags = [];
+                for (var x=0; x<result.length; x++){
+                    if(result[x].sectionID !=0){
+                        articles[i][j].tags.push(result[x]); //maybe just the name?
+                    }
+                }
+                j++;
+                getTags(articles, sections, length, callback,i,j);
+            })
+        }
+        else{
+            i++;
+            getTags(articles, sections, length, callback,i,0);
+        }
+    }
+    else {
+        getSendArticles(articles,sections,length,callback);
+    }
+}
+//get sendArticles of user
+function getSendArticles(articles,sections,length,callback) {
+    var query = 'SELECT article FROM articlesSendToUser WHERE user='+sections[0].user+' ORDER BY timestamp DESC LIMIT 0,100';
+    db.read(query,function (result) {
+        //remove already send articles from obj
+        for (var i=0;i<articles.length;i++){
+            for(var j=0;j<articles[i].length;j++){
+                for (var x=0;x<result.length;x++){
+                    if(articles[i][j]) {
+                        if (articles[i][j].id === result[x].article) {
+                            articles[i][j] = false;
+                        }
+                    }
+                }
+            }
+        }
+        getUserLikes(articles,sections,length,callback);
+    })
+}
+// and make list of the rest?
+
+//determine personal importance
+//get users likes (more than 10000 Importance)
+function getUserLikes(articles,sections,length,callback) {
+    var query = 'SELECT * FROM userLikes JOIN likeEntities ON userLikes.likeEntity=likeEntities.id WHERE userLikes.user='+
+            sections[0].user+' AND likeEntities.follower>10000';
+    db.read(query,function (result) {
+        console.log(result.length);
+    })
+}
+//match likes and meta data -> double article score if match
+
+//divide score by category position (1. 2. ...)
+
+//order list
+
+//make sure not more then 2/3? articles per category in result
+//call callback with result
+
+
 //settings functionality
 function getArticlesThemes(user,callback) {
     getArticles(user,callback);
@@ -136,5 +222,6 @@ module.exports = {
     summaryGlobalImportance: summaryGlobalImportance,
     saveFbData: saveFbData,
     getArticleThemes: getArticlesThemes,
-    getIdsAndLikeCat: getIdsAndLikeCat
+    getIdsAndLikeCat: getIdsAndLikeCat,
+    summaryPersonalImportance: summaryPersonalImportance
 };
