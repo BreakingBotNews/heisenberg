@@ -66,8 +66,9 @@ function getSendArticles(articles,sections,length,callback) {
             for(var j=0;j<articles[i].length;j++){
                 for (var x=0;x<result.length;x++){
                     if(articles[i][j]) {
-                        if (articles[i][j].id === result[x].article) {
+                        if (articles[i][j].id == result[x].article) {
                             articles[i][j] = false;
+                            console.log("double"); //doesnt work!?
                         }
                     }
                 }
@@ -76,25 +77,74 @@ function getSendArticles(articles,sections,length,callback) {
         getUserLikes(articles,sections,length,callback);
     })
 }
-// and make list of the rest?
 
 //determine personal importance
-//get users likes (more than 10000 Importance)
+//get users likes (more than 10000 follower)
 function getUserLikes(articles,sections,length,callback) {
     var query = 'SELECT * FROM userLikes JOIN likeEntities ON userLikes.likeEntity=likeEntities.id WHERE userLikes.user='+
             sections[0].user+' AND likeEntities.follower>10000';
     db.read(query,function (result) {
-        console.log(result.length);
+        calculateList(articles,sections,result,length,callback);
     })
 }
-//match likes and meta data -> double article score if match
 
-//divide score by category position (1. 2. ...)
+function calculateList(articles,sections,likes,length,callback) {
+    var list = [];
+    var returnList=[];
+    var sectionCounter=0;
+    //match likes and meta data -> double article score if match
+    for (var i=0; i<articles.length; i++){
+        for (var j=0; j<articles[i].length; j++){
+            if(articles[i][j]){
+                for (var x=0; x<articles[i][j].tags.length; x++){
+                    for(var y=0;y<likes.length;y++){
+                        if(articles[i][j].tags[x].name.toLowerCase()==likes[y].name.toLowerCase()&&likes[y].name.toLowerCase()!=="the guardian"){
+                            articles[i][j].importance = articles[i][j].importance*2;
+                            console.log("Corresponding Like and Meta data point: "+articles[i][j].tags[x].name.toLowerCase()+" "+likes[y].name.toLowerCase()+" "+articles[i][j].id);
+                        }
+                    }
+                }
+            }
+            else {
+                console.log("false");
+            }
+        }
+    }
+    //divide score by category position (1. 2. ...)
+     for(var i=0;i<articles.length;i++){
+        sectionCounter = 0;
+        for(var j=0;j<articles[i].length;j++){
+            if(articles[i][j]){
+                articles[i][j].importance=articles[i][j].importance/(i+1);
+                //add to list if importance >1
+                if(articles[i][j].importance>1&&sectionCounter<3){
+                    list.push(articles[i][j]);
+                    sectionCounter++;
+                }
+            }
+        }
+    }
+    /*for(var i=0;i<articles.length;i++){
+        for(var j=0;j<articles[i].length;j++){
+            console.log(articles[i][j].importance);
+        }
+        console.log("break")
+    }*/
+    //order list
+    list.sort(function (a,b) {
+        return b.importance-a.importance
+    });
+    returnList=list.slice(0,length);
+    /*for(var i=0;i<returnList.length;i++){
+        console.log(returnList[i].importance);
+    }*/
+    callback(returnList);
+}
 
-//order list
 
+//not yet implemented:
 //make sure not more then 2/3? articles per category in result
-//call callback with result
+//in case there arent high profile articles in top sections these sections articles aren't shown in the result
 
 
 //settings functionality

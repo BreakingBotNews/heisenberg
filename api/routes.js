@@ -126,15 +126,27 @@ router.route('/article').post(function (req, res) {
          userId/FbId, length
          */
         var summaryRequest = req.body.summaryRequest;
-        functionality.summaryGlobalImportance(summaryRequest.length, function (result) {
-            res.json(result);
-            var aids = [];
-            for(var j=0; j<result.length; j++){
-                aids.push(result[j].id);
-            }
-            standardQuery.saveArticlesSendToUser(summaryRequest.fbId,aids); //id?
-        });
-        return;
+        if(summaryRequest.personal){
+            functionality.summaryPersonalImportance(summaryRequest.id,summaryRequest.length,function (result) {
+                res.json(result);
+                var aids = [];
+                for(var j=0; j<result.length; j++){
+                    aids.push(result[j].id);
+                }
+                standardQuery.saveArticlesSendToUser(summaryRequest.id,aids); //id?
+            });
+            return;
+        }else{
+            functionality.summaryGlobalImportance(summaryRequest.length, function (result) {
+                res.json(result);
+                var aids = [];
+                for(var j=0; j<result.length; j++){
+                    aids.push(result[j].id);
+                }
+                standardQuery.saveArticlesSendToUser(summaryRequest.id,aids); //id?
+            });
+            return;
+        }
     }
 
     //fallback
