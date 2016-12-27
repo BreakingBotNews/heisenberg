@@ -133,17 +133,29 @@ router.route('/article').post(function (req, res) {
                 for(var j=0; j<result.length; j++){
                     aids.push(result[j].id);
                 }
-                standardQuery.saveArticlesSendToUser(summaryRequest.id,aids); //id?
+                standardQuery.saveArticlesSendToUser(summaryRequest.id,aids); //id= uID
             });
             return;
-        }else{
+        }
+        if(summaryRequest.combined){
+            functionality.summaryCombined(summaryRequest.id,summaryRequest.length,function (result) {
+                res.json(result);
+                var aids = [];
+                for(var j=0; j<result.length; j++){
+                    aids.push(result[j].id);
+                }
+                standardQuery.saveArticlesSendToUser(summaryRequest.id,aids); //id= uID
+            });
+            return;
+        }
+        if(!summaryRequest.combined&&!summaryRequest.personal){
             functionality.summaryGlobalImportance(summaryRequest.length, function (result) {
                 res.json(result);
                 var aids = [];
                 for(var j=0; j<result.length; j++){
                     aids.push(result[j].id);
                 }
-                standardQuery.saveArticlesSendToUser(summaryRequest.id,aids); //id?
+                standardQuery.saveArticlesSendToUser(summaryRequest.id,aids); //id= uID
             });
             return;
         }
@@ -167,8 +179,8 @@ router.route('/settings').post(function (req, res) {
         }
         else{
             res.json({error:"Please provide a valid API Key"});
-            return;
         }
+        return;
     });
 });
 

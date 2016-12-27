@@ -110,14 +110,14 @@ function calculateList(articles,sections,likes,length,callback) {
             }
         }
     }
-    //divide score by category position (1. 2. ...)
+    //divide score by category position (1. 2. ...) TODO: This seems to make result unbalanced. Review!
      for(var i=0;i<articles.length;i++){
         sectionCounter = 0;
         for(var j=0;j<articles[i].length;j++){
             if(articles[i][j]){
                 articles[i][j].importance=articles[i][j].importance/(i+1);
                 //add to list if importance >1
-                if(articles[i][j].importance>1&&sectionCounter<3){
+                if(articles[i][j].importance>1&&sectionCounter<2){
                     list.push(articles[i][j]);
                     sectionCounter++;
                 }
@@ -146,6 +146,38 @@ function calculateList(articles,sections,likes,length,callback) {
 //make sure not more then 2/3? articles per category in result
 //in case there arent high profile articles in top sections these sections articles aren't shown in the result
 
+
+//combined summary
+
+function summaryCombined(uId, length, callback) {
+    summaryGlobalImportance(length, function (global) {
+        summaryPersonalImportance(uId,length,function (personal) {
+            var articles=[];
+            
+            for(var i=0; i<length; i++){
+                articles[i]=determineListCombined(global, personal, i, length, articles)
+            }
+            
+            callback(articles);
+        })
+    })
+}
+
+function determineListCombined(global, personal, nr, length, articles) {
+    if(nr<length/2){
+        return global[nr];
+    }
+    else{
+        nr = nr-length/2;
+        for (var i=0; i<articles.length; i++){
+            if(personal[nr].id===articles[i].id){
+                nr = nr+length/2;
+                return global[nr];
+            }
+        }
+        return personal[nr];
+    }
+}
 
 //settings functionality
 function getArticlesThemes(user,callback) {
@@ -273,5 +305,6 @@ module.exports = {
     saveFbData: saveFbData,
     getArticleThemes: getArticlesThemes,
     getIdsAndLikeCat: getIdsAndLikeCat,
-    summaryPersonalImportance: summaryPersonalImportance
+    summaryPersonalImportance: summaryPersonalImportance,
+    summaryCombined: summaryCombined
 };
